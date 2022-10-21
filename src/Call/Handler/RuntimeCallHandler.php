@@ -98,7 +98,7 @@ final class RuntimeCallHandler implements CallHandler
             return false;
         }
 
-        $errorReporting = $this->call->getErrorReportingLevel() ? : $this->errorReportingLevel;
+        $errorReporting = $this->call->getErrorReportingLevel() ?: $this->errorReportingLevel;
         /**
          * Because we always catch E_USER_DEPRECATED we need to verify
          * that this level is in the initial error reporting level.
@@ -126,7 +126,7 @@ final class RuntimeCallHandler implements CallHandler
 
         try {
             $this->call = $call;
-            $return = call_user_func_array($callable, $arguments);
+            $return = call_user_func_array($callable, array_values($arguments));
         } catch (Exception $caught) {
             $exception = $caught;
         }
@@ -151,7 +151,7 @@ final class RuntimeCallHandler implements CallHandler
      */
     private function startErrorAndOutputBuffering(Call $call)
     {
-        $errorReporting = $call->getErrorReportingLevel() ? : $this->errorReportingLevel;
+        $errorReporting = $call->getErrorReportingLevel() ?: $this->errorReportingLevel;
         set_error_handler(array($this, 'handleError'), $errorReporting | E_USER_DEPRECATED);
         $this->obStarted = ob_start();
     }
